@@ -1,5 +1,6 @@
 package payroll;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -7,11 +8,9 @@ import java.util.List;
 @Service
 public class EmployeeService {
 
-    private final EmployeeRepository repository;
+    @Autowired
+    private EmployeeRepository repository;
 
-    public EmployeeService(EmployeeRepository repository) {
-        this.repository = repository;
-    }
 
     //function that shows all employees
     public List<Employee> findAllEmployees(){

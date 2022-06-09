@@ -1,5 +1,6 @@
 package payroll;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -7,12 +8,9 @@ import java.util.List;
 @RestController
 public class EmployeeController {
 
-    private final EmployeeService service;
-
-    public EmployeeController(EmployeeService service) {
-        this.service = service;
-    }
-
+    @Autowired
+    private EmployeeService service;
+    
     //Get all employees
     //Aggregate root
     // tag::get-aggregate-root[]
