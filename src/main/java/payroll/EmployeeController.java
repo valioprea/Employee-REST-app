@@ -7,11 +7,9 @@ import java.util.List;
 @RestController
 public class EmployeeController {
 
-    private final EmployeeRepository repository;
     private final EmployeeService service;
 
-    public EmployeeController(EmployeeRepository repository, EmployeeService service) {
-        this.repository = repository;
+    public EmployeeController(EmployeeService service) {
         this.service = service;
     }
 
@@ -19,35 +17,20 @@ public class EmployeeController {
     //Aggregate root
     // tag::get-aggregate-root[]
     @GetMapping("/employees")
-    List<Employee> all() {
-        return service.findAllEmployees();
-    }
+    List<Employee> all() {return service.findAllEmployees();}
 
     //Create an employee
     @PostMapping("/employees")
-    Employee newEmployee(@RequestBody Employee newEmployee) {
-        return repository.save(newEmployee);
-    }
+    Employee newEmployee(@RequestBody Employee newEmployee) {return service.saveEmployee(newEmployee);}
 
     //Get a single employee
     @GetMapping("/employees/{id}")
-    Employee one(@PathVariable Long id) {
-        return repository.findById(id).orElseThrow(() -> new EmployeeNotFoundException(id));
-    }
+    Employee one(@PathVariable Long id) {return service.showEmployee(id);}
 
     //Update an employee by Id or create a new one if the id does not exist
     @PutMapping("/employees/{id}")
     Employee replaceEmployee(@RequestBody Employee newEmployee, @PathVariable Long id) {
-        return repository.findById(id)
-                .map(employee -> {
-                    employee.setName(newEmployee.getName());
-                    employee.setRole((newEmployee.getRole()));
-                    return repository.save(employee);
-                })
-                .orElseGet(() -> {
-                    newEmployee.setId(id);
-                    return  repository.save(newEmployee);
-                });
+        return  service.updateEmployee(id, newEmployee);
     }
 
     //Delete an employee
@@ -60,8 +43,5 @@ public class EmployeeController {
         catch (IdNotFoundException e) {
             return e.getMessage();
         }
-
-//            throw new IdNotFoundException(id);
     }
-
 }
